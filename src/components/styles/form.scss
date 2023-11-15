@@ -1,0 +1,24 @@
+.form-cont {
+  background-color: gray;
+  display: flex;
+  align-items: center;
+  padding: 1.5em;
+  border-radius: 4px;
+  gap: 1em;
+  form {
+    // padding: 1em;
+    // background-color: blueviolet;
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    // background-color: gray;
+    border-radius: 10px;
+    label {
+      font-weight: bold;
+      color: white;
+    }
+    input {
+      border: none;
+    }
+  }
+}

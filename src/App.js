@@ -1,23 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import axios from "axios";
 
+import PostalForm from "./components/PostalCodeForm";
+import LocationInfo from "./components/LocationInfo";
+import "./App.css";
 function App() {
+  const [error, setError] = useState(null);
+  const [location, setLocation] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const fetchLocation = async (postalcode) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `https://api.zippopotam.us/in/${postalcode}`
+      );
+      const data = response.data;
+      setLocation({
+        country: data.country,
+        state: data.places,
+        pincode: postalcode,
+      });
+      setLoading(false);
+      console.log(data);
+      setError(null);
+    } catch {
+      setError("Error occured while fetching the location details");
+      setLoading(false);
+    }
+  };
+
+  const handleClear = () => {
+    setLocation(null);
+    setError(null);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className="app-cont">
+      <PostalForm
+        onSubmit={fetchLocation}
+        handleClear={handleClear}
+        setError={setError}
+        setLocation={setLocation}
+      />
+      {error && (
+        <div
+          style={{
+            border: "1px red solid",
+            padding: "1em",
+            borderRadius: "5px",
+            backgroundColor: "pink",
+            opacity: 0.5,
+          }}
         >
-          Learn React
-        </a>
-      </header>
+          {error}
+        </div>
+      )}
+      {!error && <LocationInfo location={location} loading={loading} />}
     </div>
   );
 }
